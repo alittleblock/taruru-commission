@@ -752,6 +752,37 @@ footer {
 
 
 /* ========================================
+   幣別切換
+======================================== */
+.currency-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 18px 0 12px;
+}
+.currency-btn {
+    padding: 9px 16px;
+    border: 1px solid #c9a27e;
+    border-radius: 999px;
+    background: #fffaf2;
+    color: #654d3d;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.currency-btn:hover { transform: translateY(-2px); }
+.currency-btn.active {
+    background: #7c5c45;
+    color: white;
+    border-color: #7c5c45;
+}
+.currency-note {
+    margin: 0;
+    font-size: 13px;
+    color: #876d5a;
+}
+
+/* ========================================
    手機版
 ======================================== */
 
@@ -1022,6 +1053,13 @@ footer {
         商業使用、買斷或其他特殊用途，
         請於委託前另外告知並確認使用範圍。
 
+        <div class="currency-switcher" aria-label="幣別切換">
+            <button class="currency-btn active" data-currency="twd" type="button">NT$ 台幣</button>
+            <button class="currency-btn" data-currency="hkd" type="button">HK$ 港幣</button>
+            <button class="currency-btn" data-currency="cny" type="button">¥ 人民幣</button>
+        </div>
+        <p class="currency-note">各幣別為獨立優惠定價，非即時匯率換算。</p>
+
     </div>
 
 
@@ -1059,9 +1097,7 @@ footer {
                     上色後不再提供修改。
                 </p>
 
-                <div class="price">
-                    NT$400
-                </div>
+                <div class="price currency-price" data-twd="NT$400" data-hkd="HK$100" data-cny="¥85">NT$400</div>
 
             </div>
 
@@ -1100,9 +1136,7 @@ footer {
                     完成後直接出圖。
                 </p>
 
-                <div class="price">
-                    NT$200
-                </div>
+                <div class="price currency-price" data-twd="NT$200" data-hkd="HK$50" data-cny="¥42">NT$200</div>
 
             </div>
 
@@ -1140,9 +1174,7 @@ footer {
                     完成後直接出圖。
                 </p>
 
-                <div class="price">
-                    NT$200
-                </div>
+                <div class="price currency-price" data-twd="NT$200" data-hkd="HK$50" data-cny="¥42">NT$200</div>
 
             </div>
 
@@ -1180,9 +1212,7 @@ footer {
                     完成後直接出圖。
                 </p>
 
-                <div class="price">
-                    NT$250
-                </div>
+                <div class="price currency-price" data-twd="NT$250" data-hkd="HK$60" data-cny="¥50">NT$250</div>
 
             </div>
 
@@ -1220,9 +1250,7 @@ footer {
                     完成後直接出圖。
                 </p>
 
-                <div class="price">
-                    NT$350
-                </div>
+                <div class="price currency-price" data-twd="NT$350" data-hkd="HK$85" data-cny="¥75">NT$350</div>
 
             </div>
 
@@ -1260,9 +1288,7 @@ footer {
                     上色後不再提供修改。
                 </p>
 
-                <div class="price">
-                    NT$500
-                </div>
+                <div class="price currency-price" data-twd="NT$500" data-hkd="HK$115" data-cny="¥100">NT$500</div>
 
             </div>
 
@@ -1325,30 +1351,24 @@ footer {
                 </p>
 
                 <p>
-                    第1位 NT$200，
+                    第1位 <span class="portrait-base">NT$200</span>，
                     之後每增加1人或1隻動物
-                    <strong>+NT$100</strong>。
+                    <strong class="portrait-add">+NT$100</strong>。
                 </p>
 
 
                 <div class="example-price">
 
-                    1人＝NT$200<br>
-
+                    <span id="portraitExamples">1人＝NT$200<br>
                     1人＋1隻動物＝NT$300<br>
-
                     2人＋1隻動物＝NT$400<br>
-
                     3人＋1隻動物＝NT$500<br>
-
-                    最多15位＝NT$1,600
+                    最多15位＝NT$1,600</span>
 
                 </div>
 
 
-                <div class="price">
-                    NT$200 起
-                </div>
+                <div class="price currency-price" data-twd="NT$200 起" data-hkd="HK$50 起" data-cny="¥42 起">NT$200 起</div>
 
             </div>
 
@@ -1464,8 +1484,8 @@ footer {
 
                 <p>
                     可使用銀行匯款、
-                    LINE Pay，
-                    海外委託亦可使用 PayPal。
+                    LINE Pay、PayPal 與微信支付。
+                    可使用的付款方式依地區而異。
                     付款時請備註委託名稱，
                     方便確認款項。
                 </p>
@@ -1555,7 +1575,7 @@ footer {
                 <p>
                     買斷價格為
                     <strong>
-                        原委託價格 + NT$400
+                        原委託價格 + <span class="buyout-price">NT$400</span>
                     </strong>。
                     如有商業使用或其他特殊用途，
                     請於委託前確認實際使用範圍。
@@ -2169,6 +2189,48 @@ function prevWork() {
     showWork();
 
 }
+
+
+// 幣別切換功能
+const currencyData = {
+    twd: {
+        base: 'NT$200', add: '+NT$100', buyout: 'NT$400',
+        examples: ['1人＝NT$200','1人＋1隻動物＝NT$300','2人＋1隻動物＝NT$400','3人＋1隻動物＝NT$500','最多15位＝NT$1,600']
+    },
+    hkd: {
+        base: 'HK$50', add: '+HK$25', buyout: 'HK$100',
+        examples: ['1人＝HK$50','1人＋1隻動物＝HK$75','2人＋1隻動物＝HK$100','3人＋1隻動物＝HK$125','最多15位＝HK$400']
+    },
+    cny: {
+        base: '¥42', add: '+¥20', buyout: '¥85',
+        examples: ['1人＝¥42','1人＋1隻動物＝¥62','2人＋1隻動物＝¥82','3人＋1隻動物＝¥102','最多15位＝¥322']
+    }
+};
+
+function setCurrency(currency) {
+    document.querySelectorAll('.currency-price').forEach(el => {
+        el.textContent = el.dataset[currency];
+    });
+    document.querySelectorAll('.currency-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.currency === currency);
+    });
+    const data = currencyData[currency];
+    const base = document.querySelector('.portrait-base');
+    const add = document.querySelector('.portrait-add');
+    const buyout = document.querySelector('.buyout-price');
+    const examples = document.getElementById('portraitExamples');
+    if (base) base.textContent = data.base;
+    if (add) add.textContent = data.add;
+    if (buyout) buyout.textContent = data.buyout;
+    if (examples) examples.innerHTML = data.examples.join('<br>');
+    localStorage.setItem('taruruCurrency', currency);
+}
+
+document.querySelectorAll('.currency-btn').forEach(btn => {
+    btn.addEventListener('click', () => setCurrency(btn.dataset.currency));
+});
+
+setCurrency(localStorage.getItem('taruruCurrency') || 'twd');
 
 </script>
 
